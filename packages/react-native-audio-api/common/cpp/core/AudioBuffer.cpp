@@ -46,6 +46,20 @@ float *AudioBuffer::getChannelData(int channel) const {
   return channels_[channel];
 }
 
+void AudioBuffer::copyToChannel(float *source, int channelNumber,
+                                 int startInChannel) {
+  if (channelNumber < 0 || channelNumber >= numberOfChannels_) {
+    throw std::invalid_argument("Invalid channel number");
+  }
+
+  if (startInChannel < 0 || startInChannel >= length_) {
+    throw std::invalid_argument("Invalid start in channel");
+  }
+
+  std::copy(source, source + length_ - startInChannel,
+            channels_[channelNumber] + startInChannel);
+}
+
 void AudioBuffer::setChannelData(int channel, const float *data, int length) {
   if (channel < 0 || channel >= numberOfChannels_) {
     throw std::invalid_argument("Invalid channel number");
