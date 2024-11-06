@@ -16,9 +16,9 @@ export { default as BiquadFilterNode } from './core/BiquadFilterNode';
 export { default as GainNode } from './core/GainNode';
 export { default as OscillatorNode } from './core/OscillatorNode';
 export { default as StereoPannerNode } from './core/StereoPannerNode';
-export {
-  WaveType,
-  FilterType,
+export type {
+  OscillatorType,
+  BiquadFilterType,
   ChannelCountMode,
   ChannelInterpretation,
   ContextState,
