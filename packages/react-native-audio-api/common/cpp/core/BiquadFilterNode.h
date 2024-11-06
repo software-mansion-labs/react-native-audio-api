@@ -32,7 +32,7 @@ class BiquadFilterNode : public AudioNode {
   bool processAudio(float *audioData, int32_t numFrames) override;
 
  private:
-  enum class FilterType {
+  enum class BiquadFilterType {
     LOWPASS,
     HIGHPASS,
     BANDPASS,
@@ -43,48 +43,48 @@ class BiquadFilterNode : public AudioNode {
     ALLPASS
   };
 
-  static FilterType fromString(const std::string &type) {
+  static BiquadFilterType fromString(const std::string &type) {
     std::string lowerType = type;
     std::transform(
         lowerType.begin(), lowerType.end(), lowerType.begin(), ::tolower);
 
     if (lowerType == "lowpass")
-      return FilterType::LOWPASS;
+      return BiquadFilterType::LOWPASS;
     if (lowerType == "highpass")
-      return FilterType::HIGHPASS;
+      return BiquadFilterType::HIGHPASS;
     if (lowerType == "bandpass")
-      return FilterType::BANDPASS;
+      return BiquadFilterType::BANDPASS;
     if (lowerType == "lowshelf")
-      return FilterType::LOWSHELF;
+      return BiquadFilterType::LOWSHELF;
     if (lowerType == "highshelf")
-      return FilterType::HIGHSHELF;
+      return BiquadFilterType::HIGHSHELF;
     if (lowerType == "peaking")
-      return FilterType::PEAKING;
+      return BiquadFilterType::PEAKING;
     if (lowerType == "notch")
-      return FilterType::NOTCH;
+      return BiquadFilterType::NOTCH;
     if (lowerType == "allpass")
-      return FilterType::ALLPASS;
+      return BiquadFilterType::ALLPASS;
 
     throw std::invalid_argument("Invalid filter type: " + type);
   }
 
-  static std::string toString(FilterType type) {
+  static std::string toString(BiquadFilterType type) {
     switch (type) {
-      case FilterType::LOWPASS:
+      case BiquadFilterType::LOWPASS:
         return "lowpass";
-      case FilterType::HIGHPASS:
+      case BiquadFilterType::HIGHPASS:
         return "highpass";
-      case FilterType::BANDPASS:
+      case BiquadFilterType::BANDPASS:
         return "bandpass";
-      case FilterType::LOWSHELF:
+      case BiquadFilterType::LOWSHELF:
         return "lowshelf";
-      case FilterType::HIGHSHELF:
+      case BiquadFilterType::HIGHSHELF:
         return "highshelf";
-      case FilterType::PEAKING:
+      case BiquadFilterType::PEAKING:
         return "peaking";
-      case FilterType::NOTCH:
+      case BiquadFilterType::NOTCH:
         return "notch";
-      case FilterType::ALLPASS:
+      case BiquadFilterType::ALLPASS:
         return "allpass";
       default:
         throw std::invalid_argument("Unknown filter type");
@@ -96,7 +96,7 @@ class BiquadFilterNode : public AudioNode {
   std::shared_ptr<AudioParam> detuneParam_;
   std::shared_ptr<AudioParam> QParam_;
   std::shared_ptr<AudioParam> gainParam_;
-  FilterType type_;
+  BiquadFilterType type_;
 
   // delayed samples
   float x1_ = 0;

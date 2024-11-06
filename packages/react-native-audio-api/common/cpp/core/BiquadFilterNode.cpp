@@ -16,7 +16,7 @@ BiquadFilterNode::BiquadFilterNode(BaseAudioContext *context)
       std::make_shared<AudioParam>(context, 1.0, -MAX_FILTER_Q, MAX_FILTER_Q);
   gainParam_ = std::make_shared<AudioParam>(
       context, 0.0, MIN_FILTER_GAIN, MAX_FILTER_GAIN);
-  type_ = FilterType::LOWPASS;
+  type_ = BiquadFilterType::LOWPASS;
 }
 
 std::string BiquadFilterNode::getType() const {
@@ -321,37 +321,37 @@ void BiquadFilterNode::applyFilter() {
   }
 
   switch (type_) {
-    case FilterType::LOWPASS:
+    case BiquadFilterType::LOWPASS:
       setLowpassCoefficients(
           normalizedFrequency, QParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::HIGHPASS:
+    case BiquadFilterType::HIGHPASS:
       setHighpassCoefficients(
           normalizedFrequency, QParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::BANDPASS:
+    case BiquadFilterType::BANDPASS:
       setBandpassCoefficients(
           normalizedFrequency, QParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::LOWSHELF:
+    case BiquadFilterType::LOWSHELF:
       setLowshelfCoefficients(
           normalizedFrequency, gainParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::HIGHSHELF:
+    case BiquadFilterType::HIGHSHELF:
       setHighshelfCoefficients(
           normalizedFrequency, gainParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::PEAKING:
+    case BiquadFilterType::PEAKING:
       setPeakingCoefficients(
           normalizedFrequency,
           QParam_->getValueAtTime(currentTime),
           gainParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::NOTCH:
+    case BiquadFilterType::NOTCH:
       setNotchCoefficients(
           normalizedFrequency, QParam_->getValueAtTime(currentTime));
       break;
-    case FilterType::ALLPASS:
+    case BiquadFilterType::ALLPASS:
       setAllpassCoefficients(
           normalizedFrequency, QParam_->getValueAtTime(currentTime));
       break;
