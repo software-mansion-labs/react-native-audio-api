@@ -2,11 +2,11 @@ import React from 'react';
 import { useRef, useState, useEffect, FC } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import {
-  AudioContext,
   GainNode,
+  AudioContext,
+  OscillatorType,
   OscillatorNode,
   StereoPannerNode,
-  type OscillatorType,
 } from 'react-native-audio-api';
 
 import { Container, Slider, Spacer, Button } from '../../components';

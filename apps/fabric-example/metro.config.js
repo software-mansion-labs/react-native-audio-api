@@ -2,14 +2,12 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const path = require('path');
 
 const projectRoot = __dirname;
-const repostioryRoot = path.resolve(__dirname, '../..');
+const repositoryRoot = path.resolve(projectRoot, '../..');
 // @ts-expect-error
 const exclusionList = require('metro-config/src/defaults/exclusionList');
 const escape = require('escape-string-regexp');
 
 const duplicatedModules = ['react', 'react-dom', 'react-native'];
-
-const defaultConfig = getDefaultConfig(__dirname);
 
 /**
  * Metro configuration
@@ -19,25 +17,24 @@ const defaultConfig = getDefaultConfig(__dirname);
  */
 const config = {
   projectRoot,
-  watchFolders: [repostioryRoot],
+  watchFolders: [repositoryRoot],
 
   resolver: {
-    assetExts: [...defaultConfig.resolver.assetExts, 'wav'],
     blacklistRE: exclusionList(
       duplicatedModules.map(
         (m) =>
           new RegExp(
-            `^${escape(path.join(repostioryRoot, 'node_modules', m))}\\/.*$`
+            `^${escape(path.join(repositoryRoot, 'node_modules', m))}\\/.*$`
           )
       )
     ),
 
     extraNodeModules: duplicatedModules.reduce((acc, name) => {
       // @ts-expect-error
-      acc[name] = path.join(__dirname, 'node_modules', name);
+      acc[name] = path.join(projectRoot, 'node_modules', name);
       return acc;
     }, {}),
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = mergeConfig(getDefaultConfig(projectRoot), config);

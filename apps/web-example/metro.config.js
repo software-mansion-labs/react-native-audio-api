@@ -1,30 +1,36 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require('expo/metro-config');
+
 const path = require('path');
+const exclusionList = require('metro-config/src/defaults/exclusionList');
+const escape = require('escape-string-regexp');
 
-const config = getDefaultConfig(__dirname);
+// Find the project and workspace directories
+const projectRoot = __dirname;
+// This can be replaced with `find-yarn-workspace-root`
+const repositoryRoot = path.resolve(projectRoot, '../..');
 
-// npm v7+ will install ../node_modules/react-native because of peerDependencies.
-// To prevent the incompatible react-native bewtween ./node_modules/react-native and ../node_modules/react-native,
-// excludes the one from the parent folder when bundling.
-config.resolver.blockList = [
-  ...Array.from(config.resolver.blockList ?? []),
-  new RegExp(path.resolve('../..', 'node_modules', 'react-native')),
-  new RegExp(path.resolve('../..', 'node_modules', 'react')),
-];
+const config = getDefaultConfig(projectRoot);
 
+config.projectRoot = projectRoot;
+
+// 1. Watch all files within the monorepo
+config.watchFolders = [repositoryRoot];
+
+// 2. Let Metro know where to resolve packages and in what order
 config.resolver.nodeModulesPaths = [
-  path.resolve(__dirname, './node_modules'),
-  path.resolve(__dirname, '../../node_modules'),
+  path.resolve(projectRoot, 'node_modules'),
+  path.resolve(repositoryRoot, 'node_modules'),
 ];
 
-config.watchFolders = [path.resolve(__dirname, '../..')];
+const modulesToBlock = ['react', 'react-dom', 'react-native'];
 
-config.transformer.getTransformOptions = async () => ({
-  transform: {
-    experimentalImportSupport: false,
-    inlineRequires: true,
-  },
-});
+config.resolver.blacklistRE = exclusionList(
+  modulesToBlock.map(
+    (m) =>
+      new RegExp(
+        `^${escape(path.join(repositoryRoot, 'node_modules', m))}\\/.*$`
+      )
+  )
+);
 
 module.exports = config;
