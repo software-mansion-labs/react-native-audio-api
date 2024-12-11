@@ -4,10 +4,9 @@ namespace audioapi {
 using namespace facebook;
 
 AudioAPIInstallerHostObject::AudioAPIInstallerHostObject(
-    const std::shared_ptr<AudioAPIInstallerWrapper> &wrapper,
     jsi::Runtime *runtime,
-    const std::shared_ptr<facebook::react::CallInvoker> &jsInvoker)
-    : wrapper_(wrapper) {
+    const std::shared_ptr<react::CallInvoker> &jsInvoker)
+    : rnRuntime_(runtime) {
   promiseVendor_ =
       std::make_shared<JsiPromise::PromiseVendor>(runtime, jsInvoker);
 }
@@ -35,9 +34,9 @@ jsi::Value AudioAPIInstallerHostObject::get(
             const jsi::Value &thisValue,
             const jsi::Value *arguments,
             size_t count) -> jsi::Value {
-          auto audioContext = wrapper_->createAudioContext();
+          auto audioContext = std::make_shared<AudioContext>();
           auto audioContextHostObject =
-              AudioContextHostObject::createFromWrapper(
+              std::make_shared<AudioContextHostObject>(
                   audioContext, promiseVendor_);
           return jsi::Object::createFromHostObject(
               runtime, audioContextHostObject);
