@@ -1,3 +1,6 @@
+#include "AudioArray.h"
+#include "AudioBus.h"
+#include "AudioUtils.h"
 #include "AudioScheduledSourceNode.h"
 #include "AudioNodeManager.h"
 #include "BaseAudioContext.h"
@@ -5,21 +8,29 @@
 namespace audioapi {
 
 AudioScheduledSourceNode::AudioScheduledSourceNode(BaseAudioContext *context)
-    : AudioNode(context), playbackState_(PlaybackState::UNSCHEDULED) {
+    : AudioNode(context), playbackState_(PlaybackState::UNSCHEDULED), startTime_(-1.0), stopTime_(-1) {
   numberOfInputs_ = 0;
-  isInitialized_ = true;
 }
 
 void AudioScheduledSourceNode::start(double time) {
-  context_->getNodeManager()->addSourceNode(shared_from_this());
-
   playbackState_ = PlaybackState::SCHEDULED;
-  waitAndExecute(time, [this](double time) { startPlayback(); });
+  startTime_ = time;
+
+  context_->getNodeManager()->addSourceNode(shared_from_this());
 }
 
 void AudioScheduledSourceNode::stop(double time) {
-  waitAndExecute(time, [this](double time) { stopPlayback(); });
+  stopTime_ = time;
 }
+
+bool AudioScheduledSourceNode::isUnscheduled() {
+  return playbackState_ == PlaybackState::UNSCHEDULED;
+}
+
+bool AudioScheduledSourceNode::isScheduled() {
+  return playbackState_ == PlaybackState::SCHEDULED;
+}
+
 
 bool AudioScheduledSourceNode::isPlaying() {
   return playbackState_ == PlaybackState::PLAYING;
@@ -29,25 +40,60 @@ bool AudioScheduledSourceNode::isFinished() {
   return playbackState_ == PlaybackState::FINISHED;
 }
 
-void AudioScheduledSourceNode::startPlayback() {
-  playbackState_ = PlaybackState::PLAYING;
-}
+void AudioScheduledSourceNode::updatePlaybackInfo(AudioBus *processingBus, int framesToProcess, size_t& startOffset, size_t& nonSilentFramesToProcess) {
+  int sampleRate = context_->getSampleRate();
 
-void AudioScheduledSourceNode::stopPlayback() {
-  playbackState_ = PlaybackState::FINISHED;
-  disable();
-}
+  size_t firstFrame = context_->getCurrentSampleFrame();
+  size_t lastFrame = firstFrame + framesToProcess;
 
-void AudioScheduledSourceNode::waitAndExecute(
-    double time,
-    const std::function<void(double)> &fun) {
-  std::thread([this, time, fun]() {
-    while (context_->getCurrentTime() < time) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  size_t startFrame = std::max(AudioUtils::timeToSampleFrame(startTime_, sampleRate), firstFrame);
+  size_t stopFrame = AudioUtils::timeToSampleFrame(stopTime_, sampleRate);
+
+  if (isUnscheduled() || isFinished()) {
+    startOffset = 0;
+    nonSilentFramesToProcess = 0;
+    return;
+  }
+
+  if (isScheduled()) {
+    // not yet playing
+    if (startFrame > lastFrame) {
+      startOffset = 0;
+      nonSilentFramesToProcess = 0;
+      return;
     }
 
-    fun(time);
-  }).detach();
+    // start playing
+    // zero first frames before starting frame
+    playbackState_ = PlaybackState::PLAYING;
+    startOffset = std::max(0ul, std::max(startFrame, firstFrame) - firstFrame);
+    nonSilentFramesToProcess = std::min(lastFrame, stopFrame) - startFrame;
+    processingBus->zero(0, startOffset);
+    return;
+  }
+
+  // isPlaying() == true
+
+  // stop will happen in this render quantum
+  // zero remaining frames after stop frame
+  if (stopFrame < lastFrame && stopFrame >= firstFrame) {
+    startOffset = 0;
+    nonSilentFramesToProcess = stopFrame - firstFrame;
+    processingBus->zero(stopFrame - firstFrame, lastFrame - stopFrame);
+    return;
+  }
+
+  // mark as finished in first silent render quantum
+  if (stopFrame < firstFrame) {
+    startOffset = 0;
+    nonSilentFramesToProcess = 0;
+    playbackState_ = PlaybackState::FINISHED;
+    return;
+  }
+
+  // normal "mid-buffer" playback
+  startOffset = 0;
+  nonSilentFramesToProcess = framesToProcess;
 }
 
 } // namespace audioapi
