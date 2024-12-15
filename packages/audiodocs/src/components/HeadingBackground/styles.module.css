@@ -1,0 +1,32 @@
+.headingBackground {
+  position: absolute;
+  top: 0;
+
+  width: 100%;
+  height: 130vh;
+  min-height: 70vw;
+  overflow: hidden;
+  z-index: 0;
+}
+
+:root {
+  .headingBackground {
+    background: linear-gradient(
+      180deg,
+      var(--swm-green-light-40) 0%,
+      var(--swm-green-light-20) 23%,
+      transparent 46%
+    );
+  }
+}
+
+:root[data-theme='dark'] {
+  .headingBackground {
+    background: linear-gradient(
+      180deg,
+      var(--swm-navy-dark-120) 0%,
+      var(--swm-navy-dark-120) 23%,
+      transparent 46%
+    );
+  }
+}

@@ -36,14 +36,12 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: '/',
           breadcrumbs: false,
           sidebarCollapsible: false,
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
             'https://github.com/software-mansion-labs/react-native-audio-api/edit/main/packages/audiodocs/docs',
         },
-        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -60,9 +58,9 @@ const config = {
   },
 
   themeConfig: {
-    // Replace with your project's social card
     // image: 'img/docusaurus-social-card.jpg',
     navbar: {
+      title: 'React Native Audio API',
       hideOnScroll: true,
       // logo: {
       //   // alt: 'react-native-audio-api logo',
@@ -86,7 +84,7 @@ const config = {
       ],
     },
     footer: {
-      style: 'dark',
+      // style: 'dark',
       links: [],
       copyright: `All trademarks and copyrights belong to their respective owners.`,
     },

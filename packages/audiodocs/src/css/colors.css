@@ -123,7 +123,7 @@
   --swm-background: var(--swm-white);
   --swm-off-background: var(--swm-off-white);
 
-  --ifm-background-color: var(--swm-background);
+  --ifm-background-color: var(--swm-landing-background);
   --ifm-navbar-background-color: var(--swm-background);
   --ifm-navbar-link-color: var(--swm-navy-dark-100);
 
@@ -244,7 +244,7 @@
   --swm-sidebar-backdrop: rgba(0, 26, 114, 0.5);
 
   /* Landing */
-  --swm-landing-heading: var(--swm-blue-light-100);
+  --swm-landing-heading: var(--swm-navy-light-100);
   --swm-landing-heading-accent: var(--swm-navy-light-100);
   --swm-landing-cursor: var(--swm-blue-light-100);
   --swm-landing-subheading: var(--swm-navy-dark-100);
@@ -257,8 +257,8 @@
 
   /* Hire Us Section */
 
-  --swm-hire-us-section-title: var(--swm-blue-light-100);
-  --swm-hire-us-section: var(--swm-navy-light-100);
+  --swm-hire-us-section-title: var(--swm-green-light-100);
+  --swm-hire-us-section: var(--swm-green-light-100);
   --swm-hire-us-section-color: var(--swm-off-white);
   --swm-hire-us-toc: var(--swm-navy-light-100);
   --swm-hire-us-toc-color: var(--swm-off-white);
@@ -303,6 +303,8 @@
   --swm-compatibility-supported-background: var(--swm-green-light-80);
   --swm-compatibility-not-supported-background: var(--swm-red-light-80);
   --swm-compatibility-text-color: var(--swm-white);
+
+  --swm-landing-button-purple: var(--swm-purple-light-100);
 }
 
 :root[data-theme='dark'] {
@@ -313,11 +315,11 @@
   --swm-background: var(--swm-navy);
   --swm-off-background: var(--swm-off-navy);
 
-  --ifm-background-color: var(--swm-background);
+  --ifm-background-color: var(--swm-landing-background);
   --ifm-navbar-background-color: var(--swm-background);
   --ifm-navbar-link-color: var(--swm-off-white);
 
-  --swm-landing-background: var(--black);
+  --swm-landing-background: var(--swm-navy-dark-140);
 
   /* Color Mode */
   --swm-color-mode-enabled: var(--swm-off-navy);
@@ -418,7 +420,7 @@
   --swm-sidebar-backdrop: rgba(35, 39, 54, 0.5);
 
   /* Landing */
-  --swm-landing-heading: var(--swm-white);
+  --swm-landing-heading: var(--swm-off-white);
   --swm-landing-heading-accent: var(--swm-blue-light-60);
   --swm-landing-cursor: var(--swm-white);
   --swm-landing-subheading: var(--swm-blue-light-60);
@@ -430,8 +432,8 @@
   --swm-landing-logo-color: var(--swm-blue-light-20);
 
   /* Hire Us Section */
-  --swm-hire-us-section-title: var(--swm-blue-light-100);
-  --swm-hire-us-section: var(--swm-blue-dark-100);
+  --swm-hire-us-section-title: var(--swm-green-light-100);
+  --swm-hire-us-section: var(--swm-green-dark-100);
   --swm-hire-us-section-color: var(--black);
   --swm-hire-us-toc: var(--swm-blue-light-80);
   --swm-hire-us-toc-color: var(--swm-off-white);

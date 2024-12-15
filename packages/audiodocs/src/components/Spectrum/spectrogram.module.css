@@ -1,0 +1,23 @@
+.mainContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.spectrogramColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transform: scale(1, -1);
+}
+
+.box {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.4rem;
+  opacity: 0.8;
+}
