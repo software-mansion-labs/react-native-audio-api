@@ -18,8 +18,8 @@ const Shape: React.FC<ShapeProps> = ({ color }) => {
         display: 'block',
         position: 'absolute',
         bottom: -1,
-        right: -10,
-        transform: 'scale(-1, 1)',
+        left: 0,
+        width: '100vw',
       }}
     >
       <path

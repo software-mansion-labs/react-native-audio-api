@@ -16,6 +16,7 @@
 
 .headingLabel :nth-child(2) {
   color: var(--swm-green-light-100);
+  position: relative;
 }
 
 .subheadingLabel {

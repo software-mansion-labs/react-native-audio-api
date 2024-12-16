@@ -1,43 +1,41 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, memo } from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
 
 import styles from './spectrogram.module.css';
+import { useAnalyser } from '../AudioProvider';
+import sampleData from './sampleData';
 
 interface BoxProps {
   isOn: boolean;
   inColIdx: number;
 }
 
-type Spectrum = boolean[][];
+const numOfLevels = 64;
+const numOfBins = 20;
 
-// prettier-ignore
-const staticLevels = [
-  1, 2, 3, 4, 5,
-  7, 10, 5, 4, 2,
-  3, 5, 4, 5, 6,
-  9, 7, 5, 4, 6,
-  3, 2, 8, 11, 15,
-];
+function parseAudioData(dataArray: Uint8Array | number[]): boolean[][] | false {
+  const output = new Array(numOfLevels)
+    .fill(null)
+    .map(() => new Array(numOfBins).fill(false));
 
-function generateInitialSpectrum(): Spectrum {
-  const spectrum = [];
+  const allZero = dataArray.every((v: number) => v === 0);
 
-  for (let i = 0; i < 25; i += 1) {
-    spectrum.push([]);
+  if (allZero) {
+    return false;
+  }
 
-    for (let j = 0; j < 15; j += 1) {
-      if (j < staticLevels[i]) {
-        spectrum[i].push(true);
-      } else {
-        spectrum[i].push(false);
-      }
+  for (let i = 0; i < numOfLevels; i += 1) {
+    const value = dataArray[i] / 255.0;
+
+    for (let j = 0; j < numOfBins; j += 1) {
+      output[i][j] = j / numOfBins < value;
     }
   }
 
-  return spectrum;
+  return output;
 }
 
-const Box: React.FC<BoxProps> = ({ isOn, inColIdx }) => {
+const Box: React.FC<BoxProps> = memo(({ isOn, inColIdx }) => {
   const { colorMode } = useColorMode();
 
   const color = useMemo(() => {
@@ -45,15 +43,15 @@ const Box: React.FC<BoxProps> = ({ isOn, inColIdx }) => {
       return 'transparent';
     }
 
-    if (inColIdx < 4) {
+    if (inColIdx < numOfBins / 4) {
       return `var(--swm-green-${colorMode}-100)`;
     }
 
-    if (inColIdx < 9) {
+    if (inColIdx < numOfBins / 2) {
       return `var(--swm-blue-${colorMode}-100)`;
     }
 
-    if (inColIdx < 12) {
+    if (inColIdx < numOfBins / 1.5) {
       return `var(--swm-yellow-${colorMode}-100)`;
     }
 
@@ -68,10 +66,22 @@ const Box: React.FC<BoxProps> = ({ isOn, inColIdx }) => {
       }}
     />
   );
-};
+});
 
 const Spectrogram: React.FC = () => {
-  const [spectrum, setSpectrum] = useState(generateInitialSpectrum());
+  const [spectrum, setSpectrum] = useState(
+    parseAudioData(sampleData) as boolean[][]
+  );
+
+  useAnalyser(
+    useCallback((dataArray, length) => {
+      const newSpectrum = parseAudioData(dataArray);
+
+      if (newSpectrum) {
+        setSpectrum(newSpectrum);
+      }
+    }, [])
+  );
 
   return (
     <div className={styles.mainContainer}>

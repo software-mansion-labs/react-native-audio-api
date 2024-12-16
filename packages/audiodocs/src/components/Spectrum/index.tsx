@@ -10,14 +10,25 @@ const Spectrum = () => {
 
   const color =
     colorMode === 'dark'
-      ? 'var(--swm-red-dark-100)'
-      : 'var(--swm-red-light-100)';
+      ? 'var(--swm-blue-dark-100)'
+      : 'var(--swm-blue-light-100)';
 
   return (
     <div className={styles.container}>
-      <div style={{ width: '100vw', height: '400px', position: 'relative' }}>
+      <div style={{ width: '100vw', height: '450px' }} />
+      <div
+        style={{
+          width: '100vw',
+          height: '800px',
+          position: 'absolute',
+          overflowX: 'hidden',
+          top: '300px',
+        }}
+      >
         <Spectrogram />
-        <Shape color={color} />
+        <div style={{ width: '100%', overflow: 'hidden' }}>
+          <Shape color={color} />
+        </div>
       </div>
       <div
         style={{
@@ -27,7 +38,9 @@ const Spectrum = () => {
           position: 'relative',
         }}
       >
-        <Shape color="var(--swm-landing-background)" />
+        <div style={{ width: '100%', overflow: 'hidden' }}>
+          <Shape color="var(--swm-landing-background)" />
+        </div>
       </div>
       <div
         style={{

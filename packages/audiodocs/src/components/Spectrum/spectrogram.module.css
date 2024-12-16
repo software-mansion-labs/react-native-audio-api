@@ -2,22 +2,28 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.2rem;
   position: absolute;
-  right: 0;
+  left: 0.2rem;
   bottom: 0;
+  z-index: 0;
+  mask-image: linear-gradient(
+    rgb(0 0 0 / 50%) 0 60%,
+    rgb(0 0 0 / 100%) 60% 100%
+  );
 }
 
 .spectrogramColumn {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.2rem;
   transform: scale(1, -1);
 }
 
 .box {
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
   border-radius: 0.4rem;
   opacity: 0.8;
+  transition: all 75ms ease-in-out;
 }
