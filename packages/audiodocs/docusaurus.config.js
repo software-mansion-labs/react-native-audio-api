@@ -5,15 +5,17 @@ const lightCodeTheme = require('./src/theme/CodeBlock/highlighting-light.js');
 const darkCodeTheme = require('./src/theme/CodeBlock/highlighting-dark.js');
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const webpack = require('webpack');
+
 const config = {
   title: 'React Native Audio API',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://dummy-docs.no.no',
+  url: 'https://software-mansion-labs.github.io/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/react-native-audio-api/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -36,6 +38,7 @@ const config = {
       'classic',
       {
         docs: {
+          routeBasePath: '/',
           breadcrumbs: false,
           sidebarCollapsible: false,
           sidebarPath: require.resolve('./sidebars.js'),
@@ -84,7 +87,6 @@ const config = {
       ],
     },
     footer: {
-      // style: 'dark',
       links: [],
       copyright: `All trademarks and copyrights belong to their respective owners.`,
     },
@@ -93,6 +95,52 @@ const config = {
       darkTheme: darkCodeTheme,
     },
   },
+
+  plugins: [
+    ...[
+      process.env.NODE_ENV === 'production' && '@docusaurus/plugin-debug',
+    ].filter(Boolean),
+    async function docusaurusPlugin() {
+      return {
+        name: 'react-native-audio-api/docusaurus-plugin',
+        // @ts-ignore
+        configureWebpack(_config, isServer, _utils) {
+          const processMock = !isServer ? { process: { env: {} } } : {};
+
+          const raf = require('raf');
+          raf.polyfill();
+
+          return {
+            mergeStrategy: {
+              'resolve.extensions': 'prepend',
+            },
+            plugins: [
+              new webpack.DefinePlugin({
+                ...processMock,
+                __DEV__: 'false',
+                setImmediate: () => {},
+              }),
+            ],
+            module: {
+              rules: [
+                {
+                  test: /\.txt/,
+                  type: 'asset/source',
+                },
+                {
+                  test: /\.tsx?$/,
+                },
+              ],
+            },
+            resolve: {
+              alias: { 'react-native$': 'react-native-web' },
+              extensions: ['.web.js', '...'],
+            },
+          };
+        },
+      };
+    },
+  ],
 };
 
 module.exports = config;
