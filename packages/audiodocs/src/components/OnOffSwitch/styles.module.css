@@ -6,53 +6,89 @@
   background-color: var(--swm-navy-dark-100);
   border-radius: 4px;
   border: none;
-  align-self: flex-start;
+  align-items: stretch;
+  justify-content: stretch;
   position: absolute;
   bottom: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
+  padding: 2.5px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+}
+
+@media (max-width: 996px) {
+  .buttonContainer {
+    transform: scale(0.8);
+    bottom: 0;
+    margin-left: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .buttonContainer {
+    transform: scale(0.7);
+    bottom: 0;
+    margin-left: 3rem;
+  }
 }
 
 :root[data-theme='dark'] .buttonContainer {
   background-color: var(--swm-off-white);
 }
 
-.buttonInner {
-  height: 50px;
-  width: 25px;
-  border-radius: 2px;
-  overflow: hidden;
+.innerBezel {
+  flex: 1;
+  padding: 1px;
+  background-color: grey;
+  border-radius: 3px;
   display: flex;
-  /* transition: all 300ms ease-in-out; */
-  position: relative;
+  align-items: stretch;
+  justify-content: stretch;
+  transition: all 300ms ease-in-out;
 }
 
-.buttonMid {
-  width: 25px;
-  height: '100%';
-  /* transition: all 300ms ease-in-out; */
-}
-
-.buttonTextWrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
+.switchOuter {
+  flex: 1;
+  border-radius: 2px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+}
+
+.switchTop {
+  background-color: rgba(255, 255, 255, 0.3);
+  height: 10px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.switchBottom {
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 10px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.switchInner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
-.buttonText {
-  color: var(--swm-navy-dark-140);
-}
-
-.buttonTextOn {
+.switchTextOff {
   color: var(--swm-off-white) !important;
+  transition: all 200ms ease-in-out;
+}
+
+.switchTextOn {
+  color: white !important;
   font-weight: bold;
   transition: all 200ms ease-in-out;
 }

@@ -7,7 +7,7 @@ export default function App() {
     const audioContext = new AudioContext();
 
     const audioBuffer = await audioContext.decodeAudioDataSource(
-      '/audio/music/example-music-01.mp3'
+      '/react-native-audio-api/music/example-music-01.mp3'
     );
 
     const playerNode = audioContext.createBufferSource();

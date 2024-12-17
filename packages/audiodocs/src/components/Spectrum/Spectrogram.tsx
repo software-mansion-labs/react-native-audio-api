@@ -1,28 +1,25 @@
-import React, { useCallback, useMemo, useState, memo } from 'react';
-import { useColorMode } from '@docusaurus/theme-common';
+import React, {
+  memo,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  use,
+} from 'react';
 
+import useScreenSize from '@site/src/hooks/useScreenSize';
 import styles from './spectrogram.module.css';
-import { useAnalyser } from '../AudioProvider';
+import { useAnalyser, useAudio } from '../AudioProvider';
 import sampleData from './sampleData';
-
-interface BoxProps {
-  isOn: boolean;
-  inColIdx: number;
-}
 
 const numOfLevels = 64;
 const numOfBins = 20;
 
-function parseAudioData(dataArray: Uint8Array | number[]): boolean[][] | false {
+function parseAudioData(dataArray: Uint8Array | number[]): boolean[][] {
   const output = new Array(numOfLevels)
     .fill(null)
     .map(() => new Array(numOfBins).fill(false));
-
-  const allZero = dataArray.every((v: number) => v === 0);
-
-  if (allZero) {
-    return false;
-  }
 
   for (let i = 0; i < numOfLevels; i += 1) {
     const value = dataArray[i] / 255.0;
@@ -35,64 +32,99 @@ function parseAudioData(dataArray: Uint8Array | number[]): boolean[][] | false {
   return output;
 }
 
-const Box: React.FC<BoxProps> = memo(({ isOn, inColIdx }) => {
-  const { colorMode } = useColorMode();
-
-  const color = useMemo(() => {
-    if (!isOn) {
-      return 'transparent';
-    }
-
-    if (inColIdx < numOfBins / 4) {
-      return `var(--swm-green-${colorMode}-100)`;
-    }
-
-    if (inColIdx < numOfBins / 2) {
-      return `var(--swm-blue-${colorMode}-100)`;
-    }
-
-    if (inColIdx < numOfBins / 1.5) {
-      return `var(--swm-yellow-${colorMode}-100)`;
-    }
-
-    return `var(--swm-red-${colorMode}-100)`;
-  }, [isOn, inColIdx, colorMode]);
-
-  return (
-    <div
-      className={styles.box}
-      style={{
-        backgroundColor: color,
-      }}
-    />
-  );
-});
-
 const Spectrogram: React.FC = () => {
-  const [spectrum, setSpectrum] = useState(
-    parseAudioData(sampleData) as boolean[][]
-  );
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const useDefaultRef = useRef(true);
+
+  const { windowWidth, windowHeight } = useScreenSize();
+
+  const { isActive } = useAudio();
+
+  const renderData = useCallback((data: boolean[][]) => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const cvsCtx = canvas.getContext('2d');
+
+    cvsCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const wSize = canvas.width / 32;
+    const hSize = canvas.height / numOfBins;
+
+    const boxSize = Math.max(Math.min(32, Math.max(wSize, hSize) * 0.9), 16);
+    const boxSpacing = boxSize * 0.1;
+
+    data.forEach((col, i) => {
+      col.forEach((isOn, j) => {
+        if (!isOn) {
+          return;
+        }
+
+        cvsCtx.beginPath();
+
+        if (j < numOfBins / 4) {
+          cvsCtx.fillStyle = '#57b495';
+        } else if (j < numOfBins / 2) {
+          cvsCtx.fillStyle = '#38acdd';
+        } else if (j < numOfBins / 1.5) {
+          cvsCtx.fillStyle = '#ffd61e';
+        } else {
+          cvsCtx.fillStyle = '#ff6259';
+        }
+
+        cvsCtx.roundRect(
+          i * (boxSize + boxSpacing) + boxSpacing,
+          canvas.height - (j + 1) * (boxSize + boxSpacing),
+          boxSize,
+          boxSize,
+          boxSpacing * 2.5
+        );
+
+        cvsCtx.fill();
+      });
+    });
+  }, []);
 
   useAnalyser(
-    useCallback((dataArray, length) => {
-      const newSpectrum = parseAudioData(dataArray);
+    useCallback(
+      (dataArray) => {
+        if (!isActive) {
+          if (useDefaultRef.current) {
+            renderData(parseAudioData(sampleData));
+            return;
+          }
 
-      if (newSpectrum) {
-        setSpectrum(newSpectrum);
-      }
-    }, [])
+          setTimeout(() => {
+            useDefaultRef.current = true;
+          }, 2000);
+        } else {
+          useDefaultRef.current = false;
+        }
+
+        const newSpectrum = parseAudioData(dataArray);
+
+        if (newSpectrum) {
+          renderData(newSpectrum);
+        }
+      },
+      [isActive]
+    )
   );
 
+  useEffect(() => {
+    renderData(parseAudioData(sampleData));
+  }, [windowWidth, windowHeight]);
+
   return (
-    <div className={styles.mainContainer}>
-      {spectrum.map((col, i) => (
-        <div key={i} className={styles.spectrogramColumn}>
-          {col.map((isOn, j) => (
-            <Box key={j} isOn={isOn} inColIdx={j} />
-          ))}
-        </div>
-      ))}
-    </div>
+    <canvas
+      className={styles.canvas}
+      ref={canvasRef}
+      width={windowWidth}
+      height={windowHeight * 0.5}
+    />
   );
 };
 

@@ -8,7 +8,7 @@ export default function App() {
     const audioContext = new AudioContext();
 
     const audioBuffer = await FileSystem.downloadAsync(
-      'https://docs.swmansion.com/audio-api/audio/music/example-music-01.mp3',
+      'https://software-mansion-labs.github.io/react-native-audio-api/audio/music/example-music-01.mp3',
       `${FileSystem.documentDirectory}/example-music-01.mp3`
     ).then(({ uri }) => audioContext.decodeAudioDataSource(uri));
 

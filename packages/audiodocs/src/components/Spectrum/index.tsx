@@ -10,48 +10,59 @@ const Spectrum = () => {
 
   const color =
     colorMode === 'dark'
-      ? 'var(--swm-blue-dark-100)'
-      : 'var(--swm-blue-light-100)';
+      ? 'var(--swm-green-dark-100)'
+      : 'var(--swm-green-light-100)';
 
   return (
     <div className={styles.container}>
-      <div style={{ width: '100vw', height: '450px' }} />
-      <div
-        style={{
-          width: '100vw',
-          height: '800px',
-          position: 'absolute',
-          overflowX: 'hidden',
-          top: '300px',
-        }}
-      >
+      <div className={styles.topContainer}>
         <Spectrogram />
-        <div style={{ width: '100%', overflow: 'hidden' }}>
-          <Shape color={color} />
-        </div>
+        <Shape color={color} />
       </div>
       <div
+        className={styles.bottomContainer}
         style={{
-          width: '100vw',
-          height: '1000px',
           backgroundColor: color,
-          position: 'relative',
         }}
       >
+        <div style={{ flex: 1 }}></div>
         <div style={{ width: '100%', overflow: 'hidden' }}>
           <Shape color="var(--swm-landing-background)" />
         </div>
       </div>
-      <div
-        style={{
-          width: '100vw',
-          height: '200px',
-          backgroundColor: 'var(--swm-landing-background)',
-          position: 'relative',
-        }}
-      />
     </div>
   );
 };
 
 export default Spectrum;
+
+/* <div
+style={
+  {
+    width: '100vw', position: 'relative'
+  }
+}
+/>
+<div
+style={
+  {
+  width: '100vw',
+    top: '300px',
+  }
+}
+>
+<Shape color={color} />
+<div style={{ width: '100%', overflow: 'hidden' }}>
+</div>
+</div>
+<div
+style={
+  {
+    width: '100vw',
+    height: '200px',
+    backgroundColor: 'var(--swm-landing-background)',
+    position: 'relative',
+  }
+}
+/>
+*/

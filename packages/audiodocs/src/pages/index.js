@@ -11,13 +11,14 @@ import styles from './styles.module.css';
 
 export default function Home() {
   return (
-    <AudioProvider>
-      <Layout wrapperClassName={styles.wrapper}>
+    <Layout wrapperClassName={styles.wrapper}>
+      <AudioProvider>
         <HeadingBackground />
         <div className={styles.container}>
           <Heading />
         </div>
         <Spectrum />
+        <div style={{ height: 100 }} />
         <div className={styles.container}>
           <HireUsSection
             href={
@@ -26,7 +27,7 @@ export default function Home() {
           />
         </div>
         <FooterBackground />
-      </Layout>
-    </AudioProvider>
+      </AudioProvider>
+    </Layout>
   );
 }

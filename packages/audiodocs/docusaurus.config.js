@@ -38,7 +38,7 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: '/',
+          routeBasePath: '/docs/',
           breadcrumbs: false,
           sidebarCollapsible: false,
           sidebarPath: require.resolve('./sidebars.js'),
@@ -80,8 +80,8 @@ const config = {
         {
           'href':
             'https://github.com/software-mansion-labs/react-native-audio-api',
-          'label': 'GitHub',
           'position': 'right',
+          'className': 'header-github',
           'aria-label': 'GitHub repository',
         },
       ],

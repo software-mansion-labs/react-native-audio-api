@@ -1,3 +1,26 @@
 .container {
-  min-height: 700px;
+}
+
+.topContainer {
+  position: relative;
+  margin-top: -10rem;
+}
+
+@media (max-width: 1440px) {
+  .topContainer {
+    margin-top: -5rem;
+  }
+}
+
+@media (max-width: 996px) {
+  .topContainer {
+    margin-top: 0;
+  }
+}
+
+.bottomContainer {
+  min-height: 34rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }

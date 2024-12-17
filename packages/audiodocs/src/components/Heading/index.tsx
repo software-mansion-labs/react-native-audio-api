@@ -18,10 +18,14 @@ const Heading: React.FC = () => {
         </span>
       </h1>
       <h2 className={styles.subheadingLabel}>
-        All You need digital audio workstation for react native.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+        consectetur lectus et pellentesque ultrices.
       </h2>
       <div className={styles.buttonContainer}>
-        <HomepageButton href="/docs/" title="Get started" />
+        <HomepageButton
+          href="/react-native-audio-api/docs/"
+          title="Get started"
+        />
         {audio.isReady && (
           <button
             type="button"

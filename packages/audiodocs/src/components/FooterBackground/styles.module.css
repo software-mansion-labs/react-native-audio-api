@@ -10,8 +10,9 @@
 
   background: linear-gradient(
     180deg,
-    var(--swm-white) 40%,
-    var(--swm-green-light-40) 80%
+    transparent 40%,
+    var(--swm-green-light-20) 80%,
+    var(--swm-green-light-40) 90%
   );
 }
 
@@ -27,8 +28,8 @@
 [data-theme='dark'] .footerBackground {
   background: linear-gradient(
     180deg,
-    var(--swm-navy-dark-140) 30%,
-    var(--swm-navy-dark-120) 100%
+    transparent 40%,
+    var(--swm-navy-dark-120) 80%
   );
 }
 
@@ -39,15 +40,17 @@
   .footerBackground {
     background: linear-gradient(
       180deg,
-      var(--swm-white) 70%,
-      var(--swm-green-light-40) 100%
+      transparent 40%,
+      var(--swm-green-light-20) 80%,
+      var(--swm-green-light-40) 90%
     );
   }
+
   [data-theme='dark'] .footerBackground {
     background: linear-gradient(
       180deg,
-      var(--black) 80%,
-      var(--swm-navy-dark-140) 100%
+      transparent 40%,
+      var(--swm-navy-dark-120) 80%
     );
   }
   [class*='footerLanding'] {
@@ -69,8 +72,8 @@
   [data-theme='dark'] .footerBackground {
     background: linear-gradient(
       180deg,
-      var(--black) 70%,
-      var(--swm-navy-dark-140) 100%
+      transparent 40%,
+      var(--swm-navy-dark-120) 80%
     );
   }
   [class*='footerLanding'] {

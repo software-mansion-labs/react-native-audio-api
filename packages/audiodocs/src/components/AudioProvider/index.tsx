@@ -10,6 +10,8 @@ import React, {
   PropsWithChildren,
 } from 'react';
 
+import { useColorMode } from '@docusaurus/theme-common';
+
 type AudioProviderProps = PropsWithChildren;
 
 export enum AudioAsset {
@@ -18,6 +20,7 @@ export enum AudioAsset {
   SongC = 'SongC',
   SimpleClick = 'SimpleClick',
   MouseClick01 = 'MouseClick01',
+  LightSwitchOnOff = 'LightSwitchOnOff',
   OldRadioButonClick = 'OldRadioButonClick',
 }
 
@@ -27,17 +30,20 @@ interface ReactAudioContext {
   aCtxRef: RefObject<AudioContext | null>;
   mainGainRef: RefObject<GainNode | null>;
   analyserRef: RefObject<AnalyserNode | null>;
-  playAsset: (asset: AudioAsset) => void;
+  playAsset: (asset: AudioAsset, offset?: number, duration?: number) => void;
   setIsActive: (isActive: boolean) => void;
 }
 
 const audioAssetUrls: Record<AudioAsset, string> = {
-  [AudioAsset.SongA]: '/audio/sample-file-1.mp3',
-  [AudioAsset.SongB]: '/audio/sample-file-2.mp3',
-  [AudioAsset.SongC]: '/audio/sample-file-3.mp3',
-  [AudioAsset.SimpleClick]: '/audio/simple-click.mp3',
-  [AudioAsset.MouseClick01]: '/audio/mouse-click-01.mp3',
-  [AudioAsset.OldRadioButonClick]: '/audio/old-radio-button-click.mp3',
+  [AudioAsset.SongA]: '/react-native-audio-api/audio/sample-file-1.mp3',
+  [AudioAsset.SongB]: '/react-native-audio-api/audio/sample-file-2.mp3',
+  [AudioAsset.SongC]: '/react-native-audio-api/audio/sample-file-3.mp3',
+  [AudioAsset.SimpleClick]: '/react-native-audio-api/audio/simple-click.mp3',
+  [AudioAsset.MouseClick01]: '/react-native-audio-api/audio/mouse-click-01.mp3',
+  [AudioAsset.LightSwitchOnOff]:
+    '/react-native-audio-api/audio/light-switch-on-off.mp3',
+  [AudioAsset.OldRadioButonClick]:
+    '/react-native-audio-api/audio/old-radio-button-click.mp3',
 };
 
 const ReactAudioContext = createContext<ReactAudioContext>({
@@ -123,17 +129,25 @@ const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     [AudioAsset.SongC]: false,
     [AudioAsset.SimpleClick]: false,
     [AudioAsset.MouseClick01]: false,
+    [AudioAsset.LightSwitchOnOff]: false,
     [AudioAsset.OldRadioButonClick]: false,
   });
 
   const [isReady, setIsReady] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
+  const { colorMode } = useColorMode();
+
   const isActiveRef = useRef(isActive);
+  const isReadyRef = useRef(isReady);
 
   useEffect(() => {
     isActiveRef.current = isActive;
   }, [isActive]);
+
+  useEffect(() => {
+    isReadyRef.current = isReady;
+  }, [isReady]);
 
   const loadAudioAssets = useCallback(async () => {
     const aCtx = aCtxRef.current;
@@ -169,34 +183,53 @@ const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       const mainGain = mainGainRef.current;
       const audioAssets = audioAssetsRef.current;
 
-      if (isAssentPlaying.current[asset]) {
-        return;
-      }
+      // if (isAssentPlaying.current[asset]) {
+      //   return;
+      // }
 
       if (!aCtx || !mainGain || !audioAssets) {
         return;
       }
-
-      const clickBuffer = audioAssets[AudioAsset.MouseClick01];
-      const clickSource = aCtx.createBufferSource();
-      clickSource.buffer = clickBuffer;
-
-      clickSource.connect(mainGain);
-      clickSource.start();
 
       const buffer = audioAssets[asset];
       const source = aCtx.createBufferSource();
 
       source.buffer = buffer;
       source.connect(mainGain);
-      source.start(aCtx.currentTime, offset || 0, duration || buffer.duration);
+      source.start(
+        aCtx.currentTime,
+        offset || undefined,
+        duration || undefined
+      );
 
       isAssentPlaying.current[asset] = true;
+
       source.onended = () => {
         isAssentPlaying.current[asset] = false;
       };
     },
     []
+  );
+
+  const setIsActiveWrapper = useCallback(
+    (isActive: boolean) => {
+      const aCtx = aCtxRef.current;
+      const audioAssets = audioAssetsRef.current;
+      const asset = isActive ? AudioAsset.MouseClick01 : AudioAsset.SimpleClick;
+
+      const buffer = audioAssets[asset];
+
+      const source = aCtx.createBufferSource();
+      source.buffer = buffer;
+
+      source.connect(aCtx.destination);
+      source.connect(analyserRef.current);
+
+      source.start(aCtx.currentTime);
+
+      setIsActive(isActive);
+    },
+    [playAsset, setIsActive]
   );
 
   useEffect(() => {
@@ -223,15 +256,30 @@ const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     }
   }, [isActive]);
 
+  useEffect(() => {
+    if (!isReadyRef.current || !isActiveRef.current) {
+      return;
+    }
+
+    if (colorMode === 'light') {
+      playAsset(AudioAsset.LightSwitchOnOff, 0.1, 1);
+    } else {
+      playAsset(AudioAsset.LightSwitchOnOff, 0.1, 1);
+    }
+    0;
+  }, [colorMode, playAsset]);
+
   const context = useMemo(
     () => ({
-      isReady,
-      playAsset,
       aCtxRef,
       mainGainRef,
       analyserRef,
+
+      isReady,
       isActive,
-      setIsActive,
+
+      playAsset,
+      setIsActive: setIsActiveWrapper,
     }),
     [isReady, isActive, setIsActive, playAsset]
   );

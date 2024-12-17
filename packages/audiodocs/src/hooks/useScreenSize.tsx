@@ -10,11 +10,17 @@ import { useEffect, useState } from 'react';
  * `useIsBrowser` hook.
  */
 const useScreenSize = () => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
     const handleWindowResize = () => {
-      setWindowWidth(window.innerWidth);
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
 
     window.addEventListener('resize', handleWindowResize);
@@ -25,7 +31,8 @@ const useScreenSize = () => {
   }, []);
 
   return {
-    windowWidth,
+    windowWidth: size.width,
+    windowHeight: size.height,
   };
 };
 

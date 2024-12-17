@@ -16,10 +16,10 @@ const Shape: React.FC<ShapeProps> = ({ color }) => {
       width={windowWidth * 1.4}
       style={{
         display: 'block',
-        position: 'absolute',
-        bottom: -1,
-        left: 0,
+        zIndex: 1,
+        position: 'relative',
         width: '100vw',
+        bottom: -2,
       }}
     >
       <path
