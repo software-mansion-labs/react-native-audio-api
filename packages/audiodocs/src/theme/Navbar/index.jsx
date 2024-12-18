@@ -1,12 +1,12 @@
 import React from 'react';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import { Navbar } from '@swmansion/t-rex-ui';
 
 export default function NavbarWrapper(props) {
-  return (
-    <Navbar
-      useLandingLogoDualVariant={true}
-      isAlgoliaActive={false}
-      {...props}
-    />
-  );
+  // const titleImages = {
+  //   light: useBaseUrl('/img/title.svg'),
+  //   dark: useBaseUrl('/img/title-dark.svg'),
+  // };
+
+  return <Navbar isAlgoliaActive={false} {...props} />;
 }

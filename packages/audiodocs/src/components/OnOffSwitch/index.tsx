@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 import { useAudio } from '../AudioProvider';
 
 const OnOffSwitch = () => {
-  const { isActive, setIsActive } = useAudio();
+  const { isReady, isActive, setIsActive } = useAudio();
 
   const onClick = useCallback(() => {
     if (isActive) {
@@ -15,7 +15,12 @@ const OnOffSwitch = () => {
   }, [isActive, setIsActive]);
 
   return (
-    <button type="button" onClick={onClick} className={styles.buttonContainer}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={styles.buttonContainer}
+      disabled={!isReady}
+    >
       <div className={styles.innerBezel}>
         <div
           className={styles.switchOuter}
