@@ -3,10 +3,22 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import { Navbar } from '@swmansion/t-rex-ui';
 
 export default function NavbarWrapper(props) {
-  // const titleImages = {
-  //   light: useBaseUrl('/img/title.svg'),
-  //   dark: useBaseUrl('/img/title-dark.svg'),
-  // };
+  const titleImages = {
+    light: useBaseUrl('/img/title.svg?v=12'),
+    dark: useBaseUrl('/img/title-dark.svg?v=12'),
+  };
 
-  return <Navbar isAlgoliaActive={false} {...props} />;
+  const heroImages = {
+    logo: useBaseUrl('/img/logo-hero.svg'),
+  };
+
+  return (
+    <Navbar
+      useLandingLogoDualVariant
+      isAlgoliaActive={false}
+      titleImages={titleImages}
+      heroImages={heroImages}
+      {...props}
+    />
+  );
 }

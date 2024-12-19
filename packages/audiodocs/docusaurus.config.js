@@ -65,11 +65,11 @@ const config = {
     navbar: {
       title: 'React Native Audio API',
       hideOnScroll: true,
-      // logo: {
-      //   // alt: 'react-native-audio-api logo',
-      //   src: 'img/logo.svg',
-      //   srcDark: 'img/logo.svg',
-      // },
+      logo: {
+        alt: 'react-native-audio-api',
+        src: 'img/logo-hero.svg',
+        srcDark: 'img/logo-hero.svg',
+      },
       items: [
         {
           type: 'docSidebar',

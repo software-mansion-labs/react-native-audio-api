@@ -1,3 +1,8 @@
 @import 'colors.css';
 @import 'typography.css';
 @import 'overrides.css';
+
+:root {
+  --swm-logo-title-width: 177px !important;
+  --swm-logo-height: 50px !important;
+}

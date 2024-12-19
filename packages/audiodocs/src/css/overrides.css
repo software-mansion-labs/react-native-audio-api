@@ -5,6 +5,7 @@
 .navbar {
   min-width: 360px;
   z-index: 100;
+  background-color: var(--ifm-navbar-background-color);
 }
 
 .footer {
@@ -14,14 +15,6 @@
 .docusaurus-mermaid-container {
   display: flex;
   justify-content: center;
-}
-
-[class*="navbar__logo"] {
-  width: 180px;
-}
-
-.navbar__items :nth-child(2) {
-  margin-left: auto
 }
 
 table {
