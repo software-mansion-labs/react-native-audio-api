@@ -7,7 +7,7 @@ export default function App() {
     const audioContext = new AudioContext();
 
     const audioBuffer = await audioContext.decodeAudioDataSource(
-      '/react-native-audio-api/music/example-music-01.mp3'
+      '/react-native-audio-api/audio/music/example-music-01.mp3'
     );
 
     const playerNode = audioContext.createBufferSource();
@@ -15,6 +15,7 @@ export default function App() {
 
     playerNode.connect(audioContext.destination);
     playerNode.start(audioContext.currentTime);
+    playerNode.stop(audioContext.currentTime + 10);
   };
 
   return (

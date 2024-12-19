@@ -48,7 +48,7 @@ const config = {
         theme: {
           customCss: './src/css/custom.css',
         },
-        googleAnalytics: {
+        gtag: {
           trackingID: 'G-4BDHB978P1',
           anonymizeIP: true,
         },
@@ -59,6 +59,7 @@ const config = {
   markdown: {
     mermaid: true,
   },
+  themes: ['@docusaurus/theme-mermaid'],
 
   themeConfig: {
     // image: 'img/docusaurus-social-card.jpg',
