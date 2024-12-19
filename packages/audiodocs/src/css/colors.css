@@ -123,7 +123,7 @@
   --swm-background: var(--swm-white);
   --swm-off-background: var(--swm-off-white);
 
-  --ifm-background-color: var(--swm-landing-background);
+  --ifm-background-color: var(--swm-background);
   --ifm-navbar-background-color: var(--swm-background);
   --ifm-navbar-link-color: var(--swm-navy-dark-100);
 
@@ -315,7 +315,7 @@
   --swm-background: var(--swm-navy);
   --swm-off-background: var(--swm-off-navy);
 
-  --ifm-background-color: var(--swm-landing-background);
+  --ifm-background-color: var(--swm-background);
   --ifm-navbar-background-color: var(--swm-background);
   --ifm-navbar-link-color: var(--swm-off-white);
 

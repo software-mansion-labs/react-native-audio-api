@@ -26,11 +26,7 @@
 }
 
 [data-theme='dark'] .footerBackground {
-  background: linear-gradient(
-    180deg,
-    transparent 40%,
-    var(--swm-navy-dark-120) 80%
-  );
+  background: linear-gradient(180deg, transparent 40%, var(--swm-navy) 80%);
 }
 
 @media (max-width: 996px) {
@@ -47,11 +43,7 @@
   }
 
   [data-theme='dark'] .footerBackground {
-    background: linear-gradient(
-      180deg,
-      transparent 40%,
-      var(--swm-navy-dark-120) 80%
-    );
+    background: linear-gradient(180deg, transparent 40%, var(--swm-navy) 80%);
   }
   [class*='footerLanding'] {
     margin-top: -122px;
@@ -70,11 +62,7 @@
     );
   }
   [data-theme='dark'] .footerBackground {
-    background: linear-gradient(
-      180deg,
-      transparent 40%,
-      var(--swm-navy-dark-120) 80%
-    );
+    background: linear-gradient(180deg, transparent 40%, var(--swm-navy) 80%);
   }
   [class*='footerLanding'] {
     margin-top: -147px;

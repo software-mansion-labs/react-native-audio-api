@@ -23,7 +23,7 @@
   .headingBackground {
     background: linear-gradient(
       180deg,
-      var(--swm-navy-dark-120) 23%,
+      var(--swm-navy-dark-140) 23%,
       transparent 46%
     );
   }
