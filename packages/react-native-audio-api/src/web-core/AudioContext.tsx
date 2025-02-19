@@ -1,5 +1,9 @@
-import { ContextState, PeriodicWaveConstraints } from '../types';
-import { RangeError, InvalidAccessError } from '../errors';
+import {
+  ContextState,
+  PeriodicWaveConstraints,
+  AudioContextOptions,
+} from '../types';
+import { InvalidAccessError, NotSupportedError } from '../errors';
 import BaseAudioContext from './BaseAudioContext';
 import AnalyserNode from './AnalyserNode';
 import AudioDestinationNode from './AudioDestinationNode';
@@ -17,8 +21,14 @@ export default class AudioContext implements BaseAudioContext {
   readonly destination: AudioDestinationNode;
   readonly sampleRate: number;
 
-  constructor(_sampleRate?: number) {
-    this.context = new window.AudioContext();
+  constructor(options?: AudioContextOptions) {
+    if (options && (options.sampleRate < 8000 || options.sampleRate > 96000)) {
+      throw new NotSupportedError(
+        `The provided sampleRate is not supported: ${options.sampleRate}`
+      );
+    }
+
+    this.context = new window.AudioContext(options);
 
     this.sampleRate = this.context.sampleRate;
     this.destination = new AudioDestinationNode(this, this.context.destination);
@@ -58,20 +68,20 @@ export default class AudioContext implements BaseAudioContext {
     sampleRate: number
   ): AudioBuffer {
     if (numOfChannels < 1 || numOfChannels >= 32) {
-      throw new RangeError(
+      throw new NotSupportedError(
         `The number of channels provided (${numOfChannels}) is outside the range [1, 32]`
       );
     }
 
     if (length <= 0) {
-      throw new RangeError(
+      throw new NotSupportedError(
         `The number of frames provided (${length}) is less than or equal to the minimum bound (0)`
       );
     }
 
-    if (sampleRate <= 0) {
-      throw new RangeError(
-        `The sample rate provided (${sampleRate}) is outside the range [3000, 768000]`
+    if (sampleRate < 8000 || sampleRate > 96000) {
+      throw new NotSupportedError(
+        `The sample rate provided (${sampleRate}) is outside the range [8000, 96000]`
       );
     }
 
@@ -108,7 +118,7 @@ export default class AudioContext implements BaseAudioContext {
     return new AudioBuffer(await this.context.decodeAudioData(arrayBuffer));
   }
 
-  async close(): Promise<void> {
+  async close(): Promise<undefined> {
     await this.context.close();
   }
 }
