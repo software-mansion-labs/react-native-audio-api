@@ -9,7 +9,7 @@ import AudioBufferSourceNode from './AudioBufferSourceNode';
 import AudioBuffer from './AudioBuffer';
 import PeriodicWave from './PeriodicWave';
 import AnalyserNode from './AnalyserNode';
-import { InvalidAccessError } from '../errors';
+import { InvalidAccessError, NotSupportedError } from '../errors';
 
 export default class BaseAudioContext {
   readonly destination: AudioDestinationNode;
@@ -56,20 +56,20 @@ export default class BaseAudioContext {
     sampleRate: number
   ): AudioBuffer {
     if (numOfChannels < 1 || numOfChannels >= 32) {
-      throw new RangeError(
+      throw new NotSupportedError(
         `The number of channels provided (${numOfChannels}) is outside the range [1, 32]`
       );
     }
 
     if (length <= 0) {
-      throw new RangeError(
+      throw new NotSupportedError(
         `The number of frames provided (${length}) is less than or equal to the minimum bound (0)`
       );
     }
 
-    if (sampleRate <= 0) {
-      throw new RangeError(
-        `The sample rate provided (${sampleRate}) is outside the range [3000, 768000]`
+    if (sampleRate < 8000 || sampleRate > 96000) {
+      throw new NotSupportedError(
+        `The sample rate provided (${sampleRate}) is outside the range [8000, 96000]`
       );
     }
 
@@ -106,15 +106,8 @@ export default class BaseAudioContext {
       sourcePath = sourcePath.replace('file://', '');
     }
 
-    try {
-      const buffer = await this.context.decodeAudioDataSource(sourcePath);
-      return new AudioBuffer(buffer);
-    } catch (error) {
-      // Handle error gracefully, for example log it or throw it further with a custom message
-      console.error('Error decoding audio data source:', error);
-      throw new Error(
-        `Failed to decode audio data from source: ${sourcePath}.`
-      );
-    }
+    return new AudioBuffer(
+      await this.context.decodeAudioDataSource(sourcePath)
+    );
   }
 }

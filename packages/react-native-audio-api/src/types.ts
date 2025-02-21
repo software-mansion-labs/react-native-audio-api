@@ -12,7 +12,7 @@ export type BiquadFilterType =
   | 'notch'
   | 'allpass';
 
-export type ContextState = 'running' | 'closed';
+export type ContextState = 'running' | 'closed' | `suspended`;
 
 export type OscillatorType =
   | 'sine'
@@ -23,6 +23,10 @@ export type OscillatorType =
 
 export interface PeriodicWaveConstraints {
   disableNormalization: boolean;
+}
+
+export interface AudioContextOptions {
+  sampleRate: number;
 }
 
 export type WindowType = 'blackman' | 'hann';

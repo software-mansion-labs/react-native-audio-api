@@ -1,0 +1,28 @@
+---
+sidebar_position: 1
+---
+
+# AudioContext
+
+The `AudioContext` interface inherits from [`BaseAudioContext`](/core/base-audio-context).
+It is responsible for supervising and managing audio-processing graph.
+
+## Constructor
+
+`new AudioContext()`
+
+[`new AudioContext(options: AudioContextOptions)`](/types/audio-context-options)
+
+#### Errors
+
+| Error type | Description |
+| :---: | :---- |
+| `NotSupportedError` | `sampleRate` is outside the nominal range [8000, 96000]. |
+
+## Methods
+
+### `close`
+
+Above method lets you close the audio context, releasing any system audio resources that it uses.
+
+#### Returns `Promise<undefined>`.
