@@ -10,8 +10,9 @@ typedef struct objc_object AudioPlayer;
 
 namespace audioapi {
 
-class AudioContext;
 class AudioBus;
+class AudioContext;
+class IOSAudioManagerBridge;
 
 class IOSAudioPlayer {
  protected:
@@ -21,8 +22,10 @@ class IOSAudioPlayer {
 
  public:
   explicit IOSAudioPlayer(
+      const std::shared_ptr<IOSAudioManagerBridge> audioManagerBridge,
       const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio);
   IOSAudioPlayer(
+      const std::shared_ptr<IOSAudioManagerBridge> audioManagerBridge,
       const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio,
       float sampleRate);
   ~IOSAudioPlayer();
