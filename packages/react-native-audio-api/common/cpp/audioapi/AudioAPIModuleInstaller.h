@@ -2,7 +2,9 @@
 
 #include <audioapi/jsi/JsiPromise.h>
 #include <audioapi/core/AudioContext.h>
+#include <audioapi/system/AudioManager.h>
 #include <audioapi/HostObjects/AudioContextHostObject.h>
+#include <audioapi/HostObjects/AudioManagerHostObject.h>
 
 #include <memory>
 
@@ -14,8 +16,11 @@ class AudioAPIModuleInstaller {
  public:
   static void injectJSIBindings(jsi::Runtime *jsiRuntime, const std::shared_ptr<react::CallInvoker> &jsCallInvoker) {
     auto createAudioContext = getCreateAudioContextFunction(jsiRuntime, jsCallInvoker);
+    auto audioManager = getAudioManager(jsiRuntime);
     jsiRuntime->global().setProperty(
         *jsiRuntime, "createAudioContext", createAudioContext);
+    jsiRuntime->global().setProperty(
+        *jsiRuntime, "AudioManager", audioManager);
   }
 
  private:
@@ -43,6 +48,11 @@ class AudioAPIModuleInstaller {
           return jsi::Object::createFromHostObject(
               runtime, audioContextHostObject);
         });
+  }
+
+  static jsi::Object getAudioManager(jsi::Runtime *jsiRuntime) {
+    auto audioManagerHostObject = std::make_shared<AudioManagerHostObject>();
+    return jsi::Object::createFromHostObject(*jsiRuntime, audioManagerHostObject);
   }
 };
 

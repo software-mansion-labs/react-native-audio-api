@@ -2,12 +2,15 @@
 
 #include <audioapi/core/Constants.h>
 #include <audioapi/ios/core/IOSAudioPlayer.h>
+#include <audioapi/ios/system/IOSAudioManagerBridge.h>
 #include <audioapi/utils/AudioArray.h>
 #include <audioapi/utils/AudioBus.h>
 
 namespace audioapi {
 
-IOSAudioPlayer::IOSAudioPlayer(const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio)
+IOSAudioPlayer::IOSAudioPlayer(
+    const std::shared_ptr<IOSAudioManagerBridge> audioManagerBridge,
+    const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio)
     : channelCount_(2), renderAudio_(renderAudio), audioBus_(0)
 {
   RenderAudioBlock renderAudioBlock = ^(AudioBufferList *outputData, int numFrames) {
@@ -31,11 +34,17 @@ IOSAudioPlayer::IOSAudioPlayer(const std::function<void(std::shared_ptr<AudioBus
     }
   };
 
-  audioPlayer_ = [[AudioPlayer alloc] initWithRenderAudioBlock:renderAudioBlock channelCount:channelCount_];
+  audioPlayer_ = [[AudioPlayer alloc] initWithAudioManager:audioManagerBridge->getAudioManager()
+                                               renderAudio:renderAudioBlock
+                                              channelCount:channelCount_];
+
   audioBus_ = std::make_shared<AudioBus>(RENDER_QUANTUM_SIZE, channelCount_, getSampleRate());
 }
 
-IOSAudioPlayer::IOSAudioPlayer(const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio, float sampleRate)
+IOSAudioPlayer::IOSAudioPlayer(
+    const std::shared_ptr<IOSAudioManagerBridge> audioManagerBridge,
+    const std::function<void(std::shared_ptr<AudioBus>, int)> &renderAudio,
+    float sampleRate)
     : channelCount_(2), renderAudio_(renderAudio), audioBus_(0)
 {
   RenderAudioBlock renderAudioBlock = ^(AudioBufferList *outputData, int numFrames) {
@@ -59,9 +68,10 @@ IOSAudioPlayer::IOSAudioPlayer(const std::function<void(std::shared_ptr<AudioBus
     }
   };
 
-  audioPlayer_ = [[AudioPlayer alloc] initWithRenderAudioBlock:renderAudioBlock
-                                                    sampleRate:sampleRate
-                                                  channelCount:channelCount_];
+  audioPlayer_ = [[AudioPlayer alloc] initWithAudioManager:audioManagerBridge->getAudioManager()
+                                               renderAudio:renderAudioBlock
+                                              channelCount:channelCount_];
+
   audioBus_ = std::make_shared<AudioBus>(RENDER_QUANTUM_SIZE, channelCount_, getSampleRate());
 }
 
